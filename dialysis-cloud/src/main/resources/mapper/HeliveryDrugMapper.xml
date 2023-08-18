@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bcsd.project.mapper.HeliveryDrugMapper" >
+  <resultMap id="BaseResultMap" type="com.bcsd.project.domain.HeliveryDrug" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="hospital_id" property="hospitalId" jdbcType="INTEGER" />
+    <result column="specifications" property="specifications" jdbcType="VARCHAR" />
+    <result column="approval_number" property="approvalNumber" jdbcType="VARCHAR" />
+    <result column="manufacturer" property="manufacturer" jdbcType="VARCHAR" />
+    <result column="packaging_specifications" property="packagingSpecifications" jdbcType="VARCHAR" />
+    <result column="delivery_id" property="deliveryId" jdbcType="INTEGER" />
+    <result column="del_flag" property="delFlag" jdbcType="CHAR" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name,code,hospital_id, specifications, approval_number, manufacturer, packaging_specifications,
+    delivery_id, del_flag, create_by, create_time, update_by, update_time
+  </sql>
+
+  <select id="selectList" parameterType="com.bcsd.project.domain.HeliveryDrug" resultType="com.bcsd.project.domain.vo.HeliveryDrugVO">
+    select
+    h.*,d.name as deliveryName,d.code as deliveryCode
+    from hospital_drug h left join delivery_drug d on h.delivery_id = d.id
+     where h.del_flag = '0'
+    <if test="hospitalId != null and hospitalId != ''">
+      and h.hospital_id = #{hospitalId}
+    </if>
+    <if test="name != null and name != ''">
+      and h.name like concat('%', #{name}, '%')
+    </if>
+    <if test="specifications != null and specifications != ''" >
+      and h.specifications like concat('%', #{specifications}, '%')
+    </if>
+    <if test="approvalNumber != null and approvalNumber != ''" >
+      and h.approval_number like concat('%', #{approvalNumber}, '%')
+    </if>
+    <if test="manufacturer != null and manufacturer != ''" >
+      and h.manufacturer like concat('%', #{manufacturer}, '%')
+    </if>
+    <if test="packagingSpecifications != null and packagingSpecifications != ''" >
+      and h.packaging_specifications like concat('%', #{packagingSpecifications}, '%')
+    </if>
+    ORDER BY h.create_time
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from hospital_drug
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from hospital_drug
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bcsd.project.domain.HeliveryDrug" >
+    insert into hospital_drug (id, name, specifications, 
+      approval_number, manufacturer, packaging_specifications, 
+      delivery_id, del_flag, create_by, 
+      create_time, update_by, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{specifications,jdbcType=VARCHAR}, 
+      #{approvalNumber,jdbcType=VARCHAR}, #{manufacturer,jdbcType=VARCHAR}, #{packagingSpecifications,jdbcType=VARCHAR}, 
+      #{deliveryId,jdbcType=INTEGER}, #{delFlag,jdbcType=CHAR}, #{createBy,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bcsd.project.domain.HeliveryDrug" >
+    insert into hospital_drug
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="hospitalId != null" >
+        hospital_id,
+      </if>
+      <if test="specifications != null" >
+        specifications,
+      </if>
+      <if test="approvalNumber != null" >
+        approval_number,
+      </if>
+      <if test="manufacturer != null" >
+        manufacturer,
+      </if>
+      <if test="packagingSpecifications != null" >
+        packaging_specifications,
+      </if>
+      <if test="deliveryId != null" >
+        delivery_id,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalId != null" >
+        #{hospitalId,jdbcType=INTEGER},
+      </if>
+      <if test="specifications != null" >
+        #{specifications,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalNumber != null" >
+        #{approvalNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="manufacturer != null" >
+        #{manufacturer,jdbcType=VARCHAR},
+      </if>
+      <if test="packagingSpecifications != null" >
+        #{packagingSpecifications,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryId != null" >
+        #{deliveryId,jdbcType=INTEGER},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bcsd.project.domain.HeliveryDrug" >
+    update hospital_drug
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalId != null" >
+        hospital_id = #{hospitalId,jdbcType=VARCHAR},
+      </if>
+      <if test="specifications != null" >
+        specifications = #{specifications,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalNumber != null" >
+        approval_number = #{approvalNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="manufacturer != null" >
+        manufacturer = #{manufacturer,jdbcType=VARCHAR},
+      </if>
+      <if test="packagingSpecifications != null" >
+        packaging_specifications = #{packagingSpecifications,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryId != null" >
+        delivery_id = #{deliveryId,jdbcType=INTEGER},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bcsd.project.domain.HeliveryDrug" >
+    update hospital_drug
+    set name = #{name,jdbcType=VARCHAR},
+      specifications = #{specifications,jdbcType=VARCHAR},
+      approval_number = #{approvalNumber,jdbcType=VARCHAR},
+      manufacturer = #{manufacturer,jdbcType=VARCHAR},
+      packaging_specifications = #{packagingSpecifications,jdbcType=VARCHAR},
+      delivery_id = #{deliveryId,jdbcType=INTEGER},
+      del_flag = #{delFlag,jdbcType=CHAR},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="checkHospitalId" parameterType="integer" resultType="integer">
+		select count(1) from hospital_drug where hospital_id = #{hospitalId} and del_flag = '0'
+	</select>
+</mapper>

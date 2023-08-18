@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bcsd.project.mapper.OrderInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.bcsd.project.domain.OrderInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="hospital_id" property="hospitalId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="province_name" property="provinceName" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="county_name" property="countyName" jdbcType="VARCHAR" />
+    <result column="detail_info" property="detailInfo" jdbcType="VARCHAR" />
+    <result column="tel_num" property="telNum" jdbcType="VARCHAR" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="file_url" property="fileUrl" jdbcType="VARCHAR" />
+    <result column="is_pay" property="isPay" jdbcType="CHAR" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, status,order_number, user_id, hospital_id, user_name, province_name, city_name, county_name,
+    detail_info, tel_num, remarks, file_url, is_pay, create_by, create_time, update_by, 
+    update_time
+  </sql>
+
+  <select id="selectOrderList" resultType="com.bcsd.project.domain.vo.OrderInfoVO" parameterType="com.bcsd.project.domain.dto.OrderInfoDTO">
+    select
+    t1.*,t2.hospital_name as hospitalName,t3.nick_name as nickName,t3.identity
+    from order_info t1 left join hospital t2 on t1.hospital_id = t2.id
+    left join wx_user t3 on t1.user_id = t3.id where 1=1
+    <if test="orderNumber != null and orderNumber !=''" >
+      and t1.order_number like concat('%', #{orderNumber}, '%')
+    </if>
+    <if test="status != null and status.size > 0 ">
+      and t1.status in
+      <foreach collection="status" close=")" index="index" item="item" open="(" separator=",">
+        #{item}
+      </foreach>
+    </if>
+    <if test="userId != null and userId !=''" >
+      and t1.user_id = #{userId}
+    </if>
+    <if test="hospitalId != null and hospitalId !=''" >
+      and t1.hospital_id = #{hospitalId}
+    </if>
+    <if test="userName != null and userName !=''" >
+      and t1.user_name like concat('%', #{userName}, '%')
+    </if>
+    <if test="provinceName != null and provinceName !=''" >
+      and t1.province_name like concat('%', #{provinceName}, '%')
+    </if>
+    <if test="cityName != null and statucityNames !=''" >
+      and t1.city_name = #{cityName}
+    </if>
+    <if test="countyName != null and countyName !=''" >
+      and t1.county_name = #{countyName}
+    </if>
+    <if test="detailInfo != null and detailInfo !=''" >
+      and t1.detail_info = #{detailInfo}
+    </if>
+    <if test="telNum != null and telNum !=''" >
+      and t1.tel_num like concat('%', #{telNum}, '%')
+    </if>
+    <if test="remarks != null and remarks !=''" >
+      and t1.remarks like concat('%', #{remarks}, '%')
+    </if>
+    <if test="fileUrl != null and fileUrl !=''" >
+      and t1.file_url like concat('%', #{fileUrl}, '%')
+    </if>
+    <if test="isPay != null and isPay !=''" >
+      and t1.is_pay = #{isPay}
+    </if>
+    <if test="hospitalName != null and hospitalName !=''" >
+      and t2.hospital_name like concat('%', #{hospitalName}, '%')
+    </if>
+    <if test="nickName != null and nickName !=''" >
+      and t3.nick_name like concat('%', #{nickName}, '%')
+    </if>
+    <if test="identity != null and identity !=''" >
+      and t3.identity like concat('%', #{identity}, '%')
+    </if>
+  </select>
+
+  <select id="selectOrderCount" resultType="integer">
+    select count(1) from order_info where `status` not IN (0,-1) and user_id = #{userId}
+  </select>
+
+  <select id="selectInfoById" resultType="com.bcsd.project.domain.vo.OrderInfoVO" parameterType="java.lang.Integer" >
+    select
+      t1.*,t2.hospital_name as hospitalName,t3.nick_name as nickName,t3.identity
+    from order_info t1 left join hospital t2 on t1.hospital_id = t2.id
+    left join wx_user t3 on t1.user_id = t3.id
+    where t1.id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from order_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insertSelective" parameterType="com.bcsd.project.domain.OrderInfo" useGeneratedKeys="true" keyProperty="id">
+    insert into order_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderNumber != null" >
+        order_number,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="hospitalId != null" >
+        hospital_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="provinceName != null" >
+        province_name,
+      </if>
+      <if test="cityName != null" >
+        city_name,
+      </if>
+      <if test="countyName != null" >
+        county_name,
+      </if>
+      <if test="detailInfo != null" >
+        detail_info,
+      </if>
+      <if test="telNum != null" >
+        tel_num,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="fileUrl != null" >
+        file_url,
+      </if>
+      <if test="isPay != null" >
+        is_pay,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderNumber != null" >
+        #{orderNumber,jdbcType=NUMERIC},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="hospitalId != null" >
+        #{hospitalId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceName != null" >
+        #{provinceName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityName != null" >
+        #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="countyName != null" >
+        #{countyName,jdbcType=VARCHAR},
+      </if>
+      <if test="detailInfo != null" >
+        #{detailInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="telNum != null" >
+        #{telNum,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="fileUrl != null" >
+        #{fileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="isPay != null" >
+        #{isPay,jdbcType=CHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bcsd.project.domain.OrderInfo" >
+    update order_info
+    <set >
+      <if test="orderNumber != null" >
+        order_number = #{orderNumber,jdbcType=NUMERIC},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalId != null" >
+        hospital_id = #{hospitalId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceName != null" >
+        province_name = #{provinceName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityName != null" >
+        city_name = #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="countyName != null" >
+        county_name = #{countyName,jdbcType=VARCHAR},
+      </if>
+      <if test="detailInfo != null" >
+        detail_info = #{detailInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="telNum != null" >
+        tel_num = #{telNum,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="fileUrl != null" >
+        file_url = #{fileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="isPay != null" >
+        is_pay = #{isPay,jdbcType=CHAR},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <update id="updateStatusById" parameterType="map">
+    update order_info set status = #{status,jdbcType=CHAR} where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="checkHospitalId" parameterType="integer" resultType="integer">
+		select count(1) from order_info where hospital_id = #{hospitalId}
+	</select>
+</mapper>

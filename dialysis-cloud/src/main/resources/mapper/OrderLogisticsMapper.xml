@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bcsd.project.mapper.OrderLogisticsMapper" >
+  <resultMap id="BaseResultMap" type="com.bcsd.project.domain.OrderLogistics" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="logistics_number" property="logisticsNumber" jdbcType="VARCHAR" />
+    <result column="order_id" property="orderId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="signature_url" property="signatureUrl" jdbcType="VARCHAR" />
+    <result column="box_url" property="boxUrl" jdbcType="VARCHAR" />
+    <result column="estimated_date" property="estimatedDate" jdbcType="DATE" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, order_id,logistics_number, status, signature_url, box_url,
+    estimated_date, remarks, create_by,
+    create_time, update_by, update_time
+  </sql>
+
+  <select id="selectList" parameterType="com.bcsd.project.domain.dto.OrderLogisticsPageDTO" resultType="com.bcsd.project.domain.vo.OrderLogisticsVO">
+    select
+    t1.*,t2.order_number as orderNumber,t2.user_name as userName,t2.province_name as provinceName,t2.city_name as cityName,t2.county_name as countyName,
+    t2.detail_info as detailInfo,t2.tel_num as telNum,t4.nick_name as nickName,t4.identity
+    from order_logistics t1
+    left join order_info t2 on t1.order_id = t2.id
+    left join wx_user t4 on t2.user_id = t4.id
+    where 1=1
+    <if test="status != null and status !=''" >
+      and t1.status = #{status}
+    </if>
+    <if test="logisticsNumber != null and logisticsNumber !=''" >
+      and t1.logistics_number like concat('%', #{logisticsNumber}, '%')
+    </if>
+    <if test="orderNumber != null and orderNumber !=''" >
+      and t2.order_number like concat('%', #{orderNumber}, '%')
+    </if>
+    <if test="userId != null and userId !=''" >
+      and t2.user_id = #{userId}
+    </if>
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from order_logistics
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from order_logistics
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.bcsd.project.domain.OrderLogistics" useGeneratedKeys="true" keyProperty="id">
+    insert into order_logistics
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="logisticsNumber != null" >
+        logistics_number,
+      </if>
+
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="signatureUrl != null" >
+        signature_url,
+      </if>
+      <if test="boxUrl != null" >
+        box_url,
+      </if>
+      <if test="estimatedDate != null" >
+        estimated_date,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="logisticsNumber != null" >
+        #{logisticsNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="signatureUrl != null" >
+        #{signatureUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="boxUrl != null" >
+        #{boxUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="estimatedDate != null" >
+        #{estimatedDate,jdbcType=DATE},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bcsd.project.domain.OrderLogistics" >
+    update order_logistics
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="logisticsNumber != null" >
+        logistics_number = #{logisticsNumber,jdbcType=CHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="signatureUrl != null" >
+        signature_url = #{signatureUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="boxUrl != null" >
+        box_url = #{boxUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="estimatedDate != null" >
+        estimated_date = #{estimatedDate,jdbcType=DATE},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bcsd.project.domain.OrderLogistics" >
+    update order_logistics
+    set order_id = #{orderId,jdbcType=INTEGER},
+      status = #{status,jdbcType=CHAR},
+      signature_url = #{signatureUrl,jdbcType=VARCHAR},
+      box_url = #{boxUrl,jdbcType=VARCHAR},
+      estimated_date = #{estimatedDate,jdbcType=DATE},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectListByOrderId" resultMap="BaseResultMap" resultType="integer">
+    select * from order_logistics where order_id = #{orderId}
+  </select>
+
+  <select id="getByOrderIdNotId" parameterType="map" resultType="integer">
+    select count(1) from order_logistics where order_id = #{orderId} and id != #{id} and status = 0
+  </select>
+</mapper>

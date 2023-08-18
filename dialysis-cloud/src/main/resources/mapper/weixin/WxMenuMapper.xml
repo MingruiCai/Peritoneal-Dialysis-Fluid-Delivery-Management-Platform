@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2018-2019
+  ~ All rights reserved, Designed By www.joolun.com
+  -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bcsd.project.mapper.WxMenuMapper">
+
+	<resultMap id="wxMenuMap" type="com.bcsd.project.domain.vo.WxMenu">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="del_flag" property="delFlag" jdbcType="CHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="sort" property="sort" jdbcType="INTEGER" />
+		<result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="CHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="url" property="url" jdbcType="VARCHAR" />
+		<result column="ma_app_id" property="maAppId" jdbcType="VARCHAR" />
+		<result column="ma_page_path" property="maPagePath" jdbcType="VARCHAR" />
+		<result column="rep_type" property="repType" jdbcType="CHAR" />
+		<result column="rep_media_id" property="repMediaId" jdbcType="VARCHAR" />
+		<result column="rep_name" property="repName" jdbcType="VARCHAR" />
+		<result column="rep_desc" property="repDesc" jdbcType="VARCHAR" />
+		<result column="rep_url" property="repUrl" jdbcType="VARCHAR" />
+		<result column="rep_hq_url" property="repHqUrl" jdbcType="VARCHAR" />
+		<result column="rep_thumb_media_id" property="repThumbMediaId" jdbcType="VARCHAR" />
+		<result column="rep_thumb_url" property="repThumbUrl" jdbcType="VARCHAR" />
+	</resultMap>
+</mapper>

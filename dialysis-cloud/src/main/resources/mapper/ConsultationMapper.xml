@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bcsd.project.mapper.ConsultationMapper">
+    <resultMap id="BaseResultMap" type="com.bcsd.project.domain.Consultation">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="patient_id" property="patientId" jdbcType="BIGINT"/>
+        <result column="hospital_id" property="hospitalId" jdbcType="INTEGER"/>
+        <result column="doctor_id" property="doctorId" jdbcType="BIGINT"/>
+        <result column="fileUrl" property="fileUrl" jdbcType="VARCHAR"/>
+        <result column="reply_time" property="replyTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="CHAR"/>
+        <result column="category" property="category" jdbcType="CHAR"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.bcsd.project.domain.Consultation" extends="BaseResultMap">
+        <result column="content" property="content" jdbcType="LONGVARCHAR"/>
+        <result column="reply" property="reply" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , patient_id, hospital_id, doctor_id, fileUrl, reply_time, status, category, create_by, create_time, update_by, update_time
+    </sql>
+    <sql id="Blob_Column_List">
+        content
+        , reply
+    </sql>
+
+    <select id="selectByPrimaryKey" resultType="com.bcsd.project.domain.Consultation" parameterType="java.lang.Long">
+        select c.*,
+               h.hospital_name as hospitalName,
+               s.user_name     as doctorName
+        from consultation c
+                 left join hospital h on c.hospital_id = h.id
+                 left join sys_user s on c.doctor_id = s.user_id
+        where c.id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from consultation
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insertSelective" parameterType="com.bcsd.project.domain.Consultation">
+        insert into consultation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="patientId != null">
+                patient_id,
+            </if>
+            <if test="hospitalId != null">
+                hospital_id,
+            </if>
+            <if test="doctorId != null">
+                doctor_id,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="category != null">
+                category,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="fileUrl != null">
+                fileUrl,
+            </if>
+            <if test="reply != null">
+                reply,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="patientId != null">
+                #{patientId,jdbcType=BIGINT},
+            </if>
+            <if test="hospitalId != null">
+                #{hospitalId,jdbcType=INTEGER},
+            </if>
+            <if test="doctorId != null">
+                #{doctorId,jdbcType=BIGINT},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=CHAR},
+            </if>
+            <if test="category != null">
+                #{category,jdbcType=CHAR},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="fileUrl != null">
+                #{fileUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="reply != null">
+                #{reply,jdbcType=LONGVARCHAR},
+            </if>
+
+
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.bcsd.project.domain.Consultation">
+        update consultation
+        <set>
+            <if test="patientId != null">
+                patient_id = #{patientId,jdbcType=BIGINT},
+            </if>
+            <if test="hospitalId != null">
+                hospital_id = #{hospitalId,jdbcType=INTEGER},
+            </if>
+            <if test="doctorId != null">
+                doctor_id = #{doctorId,jdbcType=BIGINT},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=CHAR},
+            </if>
+            <if test="category != null">
+                category = #{category,jdbcType=CHAR},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="fileUrl != null">
+                fileUrl = #{fileUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="reply != null">
+                reply = #{reply,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="replyTime != null">
+                reply_time = #{replyTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="getConsultationList" parameterType="com.bcsd.project.domain.Consultation"
+            resultType="com.bcsd.project.domain.Consultation">
+        select c.*,
+        h.hospital_name as hospitalName,
+        s.nick_name as doctorName
+        from consultation c
+        left join hospital h on c.hospital_id = h.id
+        left join sys_user s on c.doctor_id = s.user_id
+        where 1=1
+        <if test="status != null and status !=''">
+            and c.status = #{status,jdbcType=CHAR}
+        </if>
+        <if test="category != null and category !=''">
+            and c.category = #{category,jdbcType=CHAR}
+        </if>
+        order by c.update_time DESC
+    </select>
+
+    <select id="getPatientConsultationList" parameterType="com.bcsd.project.domain.Consultation"
+            resultType="com.bcsd.project.domain.Consultation">
+        select c.*,
+        h.hospital_name as hospitalName,
+        s.nick_name as doctorName
+        from consultation c
+        left join hospital h on c.hospital_id = h.id
+        left join sys_user s on c.doctor_id = s.user_id
+        where c.patient_id = #{patientId, jdbcType=BIGINT}
+        <if test="content != null and content !=''">
+            and c.content like concat('%', #{content, jdbcType=LONGVARCHAR}, '%')
+        </if>
+        order by c.update_time desc
+    </select>
+
+    <select id="highlightConsultationList" parameterType="com.bcsd.project.domain.Consultation"
+            resultType="com.bcsd.project.domain.Consultation">
+        select c.*,
+        h.hospital_name as hospitalName,
+        s.nick_name as doctorName
+        from consultation c
+        left join hospital h on c.hospital_id = h.id
+        left join sys_user s on c.doctor_id=s.user_id
+        WHERE c.category = '1'
+        <if test="content != null and content !=''">
+            and c.content like concat('%', #{content, jdbcType=LONGVARCHAR}, '%')
+        </if>
+        order by c.update_time DESC
+    </select>
+
+    <select id="getHospitalConsultationList" parameterType="com.bcsd.project.domain.Consultation"
+            resultType="com.bcsd.project.domain.Consultation">
+        select c.*,
+        h.hospital_name as hospitalName,
+        s.nick_name as doctorName
+        from consultation c
+        left join hospital h on c.hospital_id = h.id
+        left join sys_user s on c.doctor_id=s.user_id
+        WHERE c.hospital_id = #{hospitalId,jdbcType=INTEGER}
+        <if test="status != null and status !=''">
+            and c.status = #{status,jdbcType=CHAR}
+        </if>
+        <if test="category != null and category !=''">
+            and c.category = #{category,jdbcType=CHAR}
+        </if>
+        order by c.update_time DESC
+
+    </select>
+
+    <select id="getHospitalNameById" parameterType="java.lang.Integer"
+            resultType="java.lang.String">
+        select h.hospital_name
+        from hospital h
+        WHERE h.id = #{hospitalId,jdbcType=INTEGER}
+    </select>
+</mapper>
