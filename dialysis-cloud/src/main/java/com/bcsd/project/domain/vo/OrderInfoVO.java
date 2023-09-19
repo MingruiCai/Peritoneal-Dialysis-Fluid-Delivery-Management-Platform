@@ -36,9 +36,13 @@ public class OrderInfoVO {
 
     private String fileUrl;
 
+    private String payUrl;
+
     private String isPay;
 
     private String nickName; //患者名
+
+    private String registrantName; //注册人姓名
 
     /**
      * 身份证号
@@ -49,7 +53,22 @@ public class OrderInfoVO {
 
     private String createBy;
 
+
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
+
+    /** 护士确认人 */
+    private String hsqrBy;
+
+    /** 护士确认时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date hsqrTime;
+
+    /** 药师审核人 */
+    private String ysshBy;
+
+    /** 药师审核时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date ysshTime;
 }

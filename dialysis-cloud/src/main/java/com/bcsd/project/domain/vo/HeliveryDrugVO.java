@@ -5,6 +5,8 @@ import com.bcsd.common.core.domain.BaseInfo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
+
 /**
  * 医院药品信息
  */
@@ -32,6 +34,6 @@ public class HeliveryDrugVO{
     private String createTime;
     private String deliveryName;
     private String deliveryCode;
-
+    private BigDecimal price;
 
 }

@@ -355,12 +355,16 @@ public class WxUserServiceImpl extends ServiceImpl<WxUserMapper, WxUser> impleme
 			operationInfo.setRemarks("订单已签收");
 			operationInfo.setType("订单已签收");
 		}
+		ThirdSession thirdSession = ThirdSessionHolder.getThirdSession();
 		orderLogistics.setStatus(OrderStatusEnum.ONE.getType());
 		orderLogistics.setSignatureUrl(signatureUrl);
 		orderLogistics.setBoxUrl(boxUrl);
 		orderLogistics.setRemarks(remarks);
+		orderLogistics.setUpdateBy(thirdSession.getWxUserName());
+		orderLogistics.setUpdateTime(new Date());
+		orderLogistics.setQsBy(thirdSession.getWxUserName());
+		orderLogistics.setQsTime(new Date());
 		orderLogisticsMapper.updateByPrimaryKeySelective(orderLogistics);
-		ThirdSession thirdSession = ThirdSessionHolder.getThirdSession();
 		operationInfo.setOrderId(Long.valueOf(id));
 		operationInfo.setCreateId(thirdSession.getWxUserId());
 		operationInfo.setCreateBy(thirdSession.getWxUserName());

@@ -1,6 +1,7 @@
 package com.bcsd.project.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.alibaba.fastjson2.JSONArray;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bcsd.common.core.domain.AjaxResult;
@@ -164,7 +165,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         operationInfo.setCreateBy(getUsername());
         operationInfo.setCreateTime(new Date());
         remarks = StringUtils.isEmpty(remarks) ? "" : remarks;
-        operationInfo.setRemarks("订单已关闭，备注信息：" + remarks);
+        operationInfo.setRemarks("订单已作废，备注信息：" + remarks);
         operationInfo.setType(OrderStatusEnum.BURDEN_ONE.getText());
         operationInfoMapper.insertSelective(operationInfo);
     }
@@ -192,6 +193,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         }
 
         Map map = new HashMap();
+        map.put("hsqrBy", getUsername());
+        map.put("hsqrTime", new Date());
         map.put("id", orderId);
         map.put("status", OrderStatusEnum.TOW.getType());
         this.baseMapper.updateStatusById(map);
@@ -230,6 +233,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             return AjaxResult.error("订单不在待审核状态!");
         }
         Map map = new HashMap();
+        map.put("ysshBy", getUsername());
+        map.put("ysshTime", new Date());
         map.put("id", id);
         map.put("status", OrderStatusEnum.THREE.getType());
         this.baseMapper.updateStatusById(map);
@@ -242,6 +247,43 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         operationInfo.setRemarks("订单已审核，备注信息：" + remarks);
         operationInfo.setType(OrderStatusEnum.THREE.getText());
         operationInfoMapper.insertSelective(operationInfo);
+        return AjaxResult.success();
+    }
+
+    /**
+     * 订单批量审核（医师审核）
+     *
+     * @param ids
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public AjaxResult orderExamineBatch(JSONArray ids, String remarks) {
+        for (int i = 0; i < ids.size(); i++) {
+            Integer id = ids.getInteger(i);
+            OrderInfo orderInfo = baseMapper.selectByPrimaryKey(id);
+            if(ObjectUtils.isEmpty(orderInfo)){
+                return AjaxResult.error("订单不存在!");
+            }
+            if(!orderInfo.getStatus().equals(OrderStatusEnum.TOW.getType())){
+                return AjaxResult.error("订单不在待审核状态!");
+            }
+            Map map = new HashMap();
+            map.put("ysshBy", getUsername());
+            map.put("ysshTime", new Date());
+            map.put("id", id);
+            map.put("status", OrderStatusEnum.THREE.getType());
+            this.baseMapper.updateStatusById(map);
+            OrderOperationInfo operationInfo = new OrderOperationInfo();
+            operationInfo.setOrderId(Long.valueOf(id));
+            operationInfo.setCreateId(getUserId().toString());
+            operationInfo.setCreateBy(getUsername());
+            operationInfo.setCreateTime(new Date());
+            remarks = StringUtils.isEmpty(remarks) ? "" : remarks;
+            operationInfo.setRemarks("订单已审核，备注信息：" + remarks);
+            operationInfo.setType(OrderStatusEnum.THREE.getText());
+            operationInfoMapper.insertSelective(operationInfo);
+        }
+
         return AjaxResult.success();
     }
 
@@ -271,7 +313,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         operationInfo.setCreateBy(getUsername());
         operationInfo.setCreateTime(new Date());
         remarks = StringUtils.isEmpty(remarks) ? "" : remarks;
-        operationInfo.setRemarks("订单已关闭，备注信息：" + remarks);
+        operationInfo.setRemarks("订单驳回，备注信息：" + remarks);
         operationInfo.setType("订单驳回");
         operationInfoMapper.insertSelective(operationInfo);
         return AjaxResult.success();
@@ -407,6 +449,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         orderLogistics.setSignatureUrl(signatureUrl);
         orderLogistics.setBoxUrl(boxUrl);
         orderLogistics.setRemarks(remarks);
+        orderLogistics.setUpdateBy(getUsername());
+        orderLogistics.setUpdateTime(new Date());
+        orderLogistics.setQsBy(getUsername());
+        orderLogistics.setQsTime(new Date());
         orderLogisticsMapper.updateByPrimaryKeySelective(orderLogistics);
 
         operationInfo.setOrderId(Long.valueOf(orderLogistics.getOrderId()));

@@ -23,6 +23,7 @@ public class OrderLogisticsDrugVO {
     private String hospitalDrugCode;
     private String specifications;
     private String packagingSpecifications;
+    private String manufacturer;
 
     /** 创建者 */
     private String createBy;

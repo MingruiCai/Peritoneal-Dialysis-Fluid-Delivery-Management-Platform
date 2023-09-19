@@ -1,5 +1,6 @@
 package com.bcsd.project.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.bcsd.common.core.domain.BaseInfo;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -64,4 +65,10 @@ public class Consultation extends BaseInfo {
      * 医生名字
      */
     private String doctorName;
+
+    @TableField(exist = false)
+    private String createTimeStart;
+
+    @TableField(exist = false)
+    private String createTimeEnd;
 }

@@ -14,11 +14,13 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="qs_by" property="qsBy" jdbcType="VARCHAR" />
+    <result column="qs_time" property="qsTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, order_id,logistics_number, status, signature_url, box_url,
     estimated_date, remarks, create_by,
-    create_time, update_by, update_time
+    create_time, update_by, update_time, qs_by, qs_time
   </sql>
 
   <select id="selectList" parameterType="com.bcsd.project.domain.dto.OrderLogisticsPageDTO" resultType="com.bcsd.project.domain.vo.OrderLogisticsVO">
@@ -41,6 +43,13 @@
     <if test="userId != null and userId !=''" >
       and t2.user_id = #{userId}
     </if>
+    <if test="createTimeStart != null and createTimeStart != ''" >
+      and t1.create_time &gt;= #{createTimeStart}
+    </if>
+    <if test="createTimeEnd != null and createTimeEnd != ''" >
+      and t1.create_time &lt;= #{createTimeEnd}
+    </if>
+    ORDER BY t1.create_time DESC
   </select>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -93,6 +102,12 @@
       <if test="updateTime != null" >
         update_time,
       </if>
+      <if test="qsBy != null" >
+        qs_by,
+      </if>
+      <if test="qsTime != null" >
+        qs_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -131,6 +146,12 @@
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="qsBy != null" >
+        #{qsBy,jdbcType=VARCHAR},
+      </if>
+      <if test="qsTime != null" >
+        #{qsTime,jdbcType=TIMESTAMP},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.bcsd.project.domain.OrderLogistics" >
@@ -168,6 +189,12 @@
       </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="qsBy != null" >
+        qs_by = #{qsBy,jdbcType=VARCHAR},
+      </if>
+      <if test="qsTime != null" >
+        qs_time = #{qsTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

@@ -27,4 +27,11 @@ public class OrderLogistics extends BaseInfo {
     private Date estimatedDate;
 
     private String remarks;
+
+    /** 签收人 */
+    private String qsBy;
+
+    /** 签收时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date qsTime;
 }

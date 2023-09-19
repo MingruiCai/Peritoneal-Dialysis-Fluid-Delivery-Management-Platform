@@ -15,21 +15,26 @@
     <result column="tel_num" property="telNum" jdbcType="VARCHAR" />
     <result column="remarks" property="remarks" jdbcType="VARCHAR" />
     <result column="file_url" property="fileUrl" jdbcType="VARCHAR" />
+    <result column="pay_url" property="payUrl" jdbcType="VARCHAR" />
     <result column="is_pay" property="isPay" jdbcType="CHAR" />
     <result column="create_by" property="createBy" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="hsqr_by" property="hsqrBy" jdbcType="VARCHAR" />
+    <result column="hsqr_time" property="hsqrTime" jdbcType="TIMESTAMP" />
+    <result column="yssh_by" property="ysshBy" jdbcType="VARCHAR" />
+    <result column="yssh_time" property="ysshTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, status,order_number, user_id, hospital_id, user_name, province_name, city_name, county_name,
-    detail_info, tel_num, remarks, file_url, is_pay, create_by, create_time, update_by, 
-    update_time
+    detail_info, tel_num, remarks, file_url,pay_url, is_pay, create_by, create_time, update_by,
+    update_time,hsqr_by,hsqr_time,yssh_by,yssh_time
   </sql>
 
   <select id="selectOrderList" resultType="com.bcsd.project.domain.vo.OrderInfoVO" parameterType="com.bcsd.project.domain.dto.OrderInfoDTO">
     select
-    t1.*,t2.hospital_name as hospitalName,t3.nick_name as nickName,t3.identity
+    t1.*,t2.hospital_name as hospitalName,t3.nick_name as nickName,t3.identity,t3.registrant_name as registrantName
     from order_info t1 left join hospital t2 on t1.hospital_id = t2.id
     left join wx_user t3 on t1.user_id = t3.id where 1=1
     <if test="orderNumber != null and orderNumber !=''" >
@@ -83,6 +88,13 @@
     <if test="identity != null and identity !=''" >
       and t3.identity like concat('%', #{identity}, '%')
     </if>
+    <if test="createTimeStart != null and createTimeStart != ''" >
+      and t1.create_time &gt;= #{createTimeStart}
+    </if>
+    <if test="createTimeEnd != null and createTimeEnd != ''" >
+      and t1.create_time &lt;= #{createTimeEnd}
+    </if>
+    ORDER BY t1.create_time DESC
   </select>
 
   <select id="selectOrderCount" resultType="integer">
@@ -150,6 +162,9 @@
       <if test="fileUrl != null" >
         file_url,
       </if>
+      <if test="payUrl != null" >
+        pay_url,
+      </if>
       <if test="isPay != null" >
         is_pay,
       </if>
@@ -205,6 +220,9 @@
       </if>
       <if test="fileUrl != null" >
         #{fileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="payUrl != null" >
+        #{payUrl,jdbcType=VARCHAR},
       </if>
       <if test="isPay != null" >
         #{isPay,jdbcType=CHAR},
@@ -262,6 +280,9 @@
       <if test="fileUrl != null" >
         file_url = #{fileUrl,jdbcType=VARCHAR},
       </if>
+      <if test="payUrl != null" >
+        pay_url = #{payUrl,jdbcType=VARCHAR},
+      </if>
       <if test="isPay != null" >
         is_pay = #{isPay,jdbcType=CHAR},
       </if>
@@ -283,7 +304,25 @@
 
 
   <update id="updateStatusById" parameterType="map">
-    update order_info set status = #{status,jdbcType=CHAR} where id = #{id,jdbcType=INTEGER}
+    update order_info
+    <set >
+      <if test="status != null" >
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="hsqrBy != null" >
+        hsqr_by = #{hsqrBy,jdbcType=VARCHAR},
+      </if>
+      <if test="hsqrTime != null" >
+        hsqr_time = #{hsqrTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ysshBy != null" >
+        yssh_by = #{ysshBy,jdbcType=VARCHAR},
+      </if>
+      <if test="ysshTime != null" >
+        yssh_time = #{ysshTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+     where id = #{id,jdbcType=INTEGER}
   </update>
 
   <select id="checkHospitalId" parameterType="integer" resultType="integer">

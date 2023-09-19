@@ -11,6 +11,7 @@
     <result column="manufacturer" property="manufacturer" jdbcType="VARCHAR" />
     <result column="packaging_specifications" property="packagingSpecifications" jdbcType="VARCHAR" />
     <result column="del_flag" property="delFlag" jdbcType="CHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
     <result column="create_by" property="createBy" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
@@ -18,7 +19,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, name,code,hospital_id, specifications, approval_number, manufacturer, packaging_specifications,
-    del_flag, create_by, create_time, update_by, update_time
+    del_flag,price, create_by, create_time, update_by, update_time
   </sql>
 
   <select id="selectList" parameterType="com.bcsd.project.domain.DeliveryDrug" resultMap="BaseResultMap">
@@ -43,7 +44,13 @@
     <if test="hospitalId != null and hospitalId !=''" >
       and hospital_id=#{hospitalId}
     </if>
-    ORDER BY create_time
+    <if test="createTimeStart != null and createTimeStart != ''" >
+      and create_time &gt;= #{createTimeStart}
+    </if>
+    <if test="createTimeEnd != null and createTimeEnd != ''" >
+      and create_time &lt;= #{createTimeEnd}
+    </if>
+    ORDER BY create_time DESC
   </select>
 
 
@@ -60,11 +67,11 @@
   <insert id="insert" parameterType="com.bcsd.project.domain.DeliveryDrug" >
     insert into delivery_drug (id, name, specifications, 
       approval_number, manufacturer, packaging_specifications, 
-      del_flag, create_by, create_time, 
+      del_flag,price, create_by, create_time,
       update_by, update_time)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{specifications,jdbcType=VARCHAR}, 
       #{approvalNumber,jdbcType=VARCHAR}, #{manufacturer,jdbcType=VARCHAR}, #{packagingSpecifications,jdbcType=VARCHAR}, 
-      #{delFlag,jdbcType=CHAR}, #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{delFlag,jdbcType=CHAR},#{price} #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
       #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bcsd.project.domain.DeliveryDrug" >
@@ -109,6 +116,9 @@
       <if test="updateTime != null" >
         update_time,
       </if>
+      <if test="price != null" >
+        price,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -149,6 +159,9 @@
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -191,6 +204,9 @@
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -205,6 +221,7 @@
       create_by = #{createBy,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>

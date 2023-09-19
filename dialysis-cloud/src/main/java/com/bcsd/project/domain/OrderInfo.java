@@ -2,8 +2,11 @@ package com.bcsd.project.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.bcsd.common.core.domain.BaseInfo;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.Date;
 
 @Data
 @EqualsAndHashCode(callSuper=true)
@@ -35,4 +38,19 @@ public class OrderInfo  extends BaseInfo {
     private String fileUrl;
 
     private String isPay;
+    private String payUrl;
+
+    /** 护士确认人 */
+    private String hsqrBy;
+
+    /** 护士确认时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date hsqrTime;
+
+    /** 药师审核人 */
+    private String ysshBy;
+
+    /** 药师审核时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date ysshTime;
 }

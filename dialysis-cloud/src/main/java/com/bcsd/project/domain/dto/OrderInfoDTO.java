@@ -1,5 +1,6 @@
 package com.bcsd.project.domain.dto;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.bcsd.common.core.domain.BaseInfo;
 import lombok.Data;
 
@@ -43,4 +44,10 @@ public class OrderInfoDTO  extends BaseInfo {
     private String identity;
 
     private String hospitalName; //医院和配送方名称
+
+    @TableField(exist = false)
+    private String createTimeStart;
+
+    @TableField(exist = false)
+    private String createTimeEnd;
 }

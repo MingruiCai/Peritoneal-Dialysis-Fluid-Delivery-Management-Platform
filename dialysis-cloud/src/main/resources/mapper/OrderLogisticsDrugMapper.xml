@@ -148,7 +148,7 @@
 
   <select id="getByLogisticsId" resultType="com.bcsd.project.domain.vo.OrderLogisticsDrugVO" parameterType="integer">
     select t1.*,t2.name as hospitalDrugName,t2.code as hospitalDrugCode,
-    t2.specifications,t2.packaging_specifications as packagingSpecifications
+    t2.specifications,t2.packaging_specifications as packagingSpecifications,t2.manufacturer
      from order_logistics_drug t1 left join hospital_drug t2 on t1.hospital_drug_id = t2.id
      where logistics_id = #{logisticsId}
   </select>

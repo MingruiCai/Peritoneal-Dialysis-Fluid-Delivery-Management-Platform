@@ -191,7 +191,13 @@
         <if test="category != null and category !=''">
             and c.category = #{category,jdbcType=CHAR}
         </if>
-        order by c.update_time DESC
+        <if test="createTimeStart != null and createTimeStart != ''" >
+            and c.createTime &gt;= #{createTimeStart}
+        </if>
+        <if test="createTimeEnd != null and createTimeEnd != ''" >
+            and c.createTime &lt;= #{createTimeEnd}
+        </if>
+        order by c.create_time DESC
     </select>
 
     <select id="getPatientConsultationList" parameterType="com.bcsd.project.domain.Consultation"
@@ -206,7 +212,13 @@
         <if test="content != null and content !=''">
             and c.content like concat('%', #{content, jdbcType=LONGVARCHAR}, '%')
         </if>
-        order by c.update_time desc
+        <if test="createTimeStart != null and createTimeStart != ''" >
+            and c.createTime &gt;= #{createTimeStart}
+        </if>
+        <if test="createTimeEnd != null and createTimeEnd != ''" >
+            and c.createTime &lt;= #{createTimeEnd}
+        </if>
+        order by c.create_time desc
     </select>
 
     <select id="highlightConsultationList" parameterType="com.bcsd.project.domain.Consultation"
@@ -221,7 +233,13 @@
         <if test="content != null and content !=''">
             and c.content like concat('%', #{content, jdbcType=LONGVARCHAR}, '%')
         </if>
-        order by c.update_time DESC
+        <if test="createTimeStart != null and createTimeStart != ''" >
+            and c.createTime &gt;= #{createTimeStart}
+        </if>
+        <if test="createTimeEnd != null and createTimeEnd != ''" >
+            and c.createTime &lt;= #{createTimeEnd}
+        </if>
+        order by c.create_time DESC
     </select>
 
     <select id="getHospitalConsultationList" parameterType="com.bcsd.project.domain.Consultation"
@@ -239,7 +257,13 @@
         <if test="category != null and category !=''">
             and c.category = #{category,jdbcType=CHAR}
         </if>
-        order by c.update_time DESC
+        <if test="createTimeStart != null and createTimeStart != ''" >
+            and c.createTime &gt;= #{createTimeStart}
+        </if>
+        <if test="createTimeEnd != null and createTimeEnd != ''" >
+            and c.createTime &lt;= #{createTimeEnd}
+        </if>
+        order by c.create_time DESC
 
     </select>
 

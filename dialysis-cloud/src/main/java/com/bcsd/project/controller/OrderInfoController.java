@@ -1,5 +1,6 @@
 package com.bcsd.project.controller;
 
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.bcsd.common.core.controller.BaseController;
 import com.bcsd.common.core.domain.AjaxResult;
@@ -118,6 +119,26 @@ public class OrderInfoController extends BaseController {
         }
         try {
             return orderInfoService.orderExamine(id,remarks);
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 订单批量审核（医师审核）
+     *
+     * @param jsonObject
+     * @return
+     */
+    @PostMapping("orderExamineBatch")
+    public AjaxResult orderExamineBatch(@RequestBody JSONObject jsonObject) {
+        JSONArray ids = jsonObject.getJSONArray("id");
+        String remarks = jsonObject.getString("remarks");
+        if (ids == null || ids.size() == 0) {
+            return AjaxResult.error("id不能为空");
+        }
+        try {
+            return orderInfoService.orderExamineBatch(ids,remarks);
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
         }

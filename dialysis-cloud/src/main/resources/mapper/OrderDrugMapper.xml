@@ -25,7 +25,7 @@
 
   <select id="selectListByOrderId" resultType="com.bcsd.project.domain.vo.OrderDrugVO" parameterType="integer">
     select t1.*,(SELECT IFNULL(sum(t4.delivery_number),'0') FROM order_logistics_drug t4 WHERE t1.hospital_drug_id = t4.hospital_drug_id AND t1.order_id = t4.order_id) as completedNumber,
-           t2.name as hospitalDrugName,t2.code as hospitalDrugCode,t3.name as deliveryDrugName,
+           t2.name as hospitalDrugName,t2.code as hospitalDrugCode,t2.manufacturer,t3.name as deliveryDrugName,
            t3.code as deliveryDrugCode,t2.specifications,t2.packaging_specifications as packagingSpecifications
     from order_drug t1 left join hospital_drug t2 on t1.hospital_drug_id = t2.id
     left join delivery_drug t3 on t2.delivery_id = t3.id

@@ -1,5 +1,6 @@
 package com.bcsd.project.service;
 
+import com.alibaba.fastjson2.JSONArray;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.bcsd.common.core.domain.AjaxResult;
 import com.bcsd.project.domain.HeliveryDrug;
@@ -34,6 +35,8 @@ public interface OrderInfoService extends IService<OrderInfo> {
 	AjaxResult orderConfirm(OrderDrugDTO orderDrugList);
 
 	AjaxResult orderExamine(Integer id,String remarks);
+
+	AjaxResult orderExamineBatch(JSONArray ids, String remarks);
 
 	AjaxResult orderReject(Integer id,String remarks);
 

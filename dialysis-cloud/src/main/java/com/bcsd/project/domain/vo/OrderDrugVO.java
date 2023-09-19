@@ -28,7 +28,7 @@ public class OrderDrugVO{
     private String specifications;
 
     private String packagingSpecifications;
-
+    private String manufacturer;
 
 
 }

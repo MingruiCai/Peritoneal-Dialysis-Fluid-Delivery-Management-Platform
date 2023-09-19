@@ -172,7 +172,13 @@
     <if test="status != null and status !=''" >
       and status = #{status,jdbcType=CHAR}
     </if>
-    ORDER BY create_time
+    <if test="createTimeStart != null and createTimeStart != ''" >
+      and createTime &gt;= #{createTimeStart}
+    </if>
+    <if test="createTimeEnd != null and createTimeEnd != ''" >
+      and createTime &lt;= #{createTimeEnd}
+    </if>
+    ORDER BY create_time DESC
   </select>
 
 </mapper>

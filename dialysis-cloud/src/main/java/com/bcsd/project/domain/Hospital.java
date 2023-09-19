@@ -1,5 +1,6 @@
 package com.bcsd.project.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.bcsd.common.core.domain.BaseInfo;
 import lombok.Data;
@@ -20,5 +21,11 @@ public class Hospital extends BaseInfo {
     private String telephone;
     private String type;
     private String delFlag;
+
+    @TableField(exist = false)
+    private String createTimeStart;
+
+    @TableField(exist = false)
+    private String createTimeEnd;
 
 }

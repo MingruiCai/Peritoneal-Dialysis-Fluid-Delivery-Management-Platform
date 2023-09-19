@@ -17,13 +17,13 @@ bcsd:
   configs:
     #生产环境患者
     - appId: wxea61079251bb4904
-      secret: c912fe38466d8156e9ef144a248708ac
+      secret: b3c41abda08516ae2d93c8b71138e56a
     #本地测试微信小程序appid
 #    - appId: wx4cf53631e4a45774
 #      #微信小程序secretId
 #      secret: f064a373f36b85cb89035b67321ac844
         # 微信支付商户号，请去微信支付平台申请
-      mchId: 1588227511
+      mchId: xxxxxxxxxx
         # 微信支付商户APIv2密钥，请去微信支付平台申请
       mchKey: xxxxxxxxxxxxxxxxxxxxx
         # p12证书的位置，可以指定绝对路径，也可以指定类路径（以classpath:开头）
@@ -106,13 +106,13 @@ spring:
   # redis 配置
   redis:
     # 本地地址
-    host: 192.168.138.81
-    # 本地密码
-    password: 123456
+#    host: 192.168.138.81
+#    # 本地密码
+#    password: 123456
     # 生产地址
-#    host: 127.0.0.1
-#    # 生产密码
-#    password: bcsd@2023!@
+    host: 127.0.0.1
+    # 生产密码
+    password: bcsd@2023!@
 
     # 端口，默认为6379
     port: 6379

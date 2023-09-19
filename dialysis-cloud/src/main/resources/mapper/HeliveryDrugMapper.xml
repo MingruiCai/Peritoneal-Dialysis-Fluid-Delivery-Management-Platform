@@ -24,7 +24,7 @@
 
   <select id="selectList" parameterType="com.bcsd.project.domain.HeliveryDrug" resultType="com.bcsd.project.domain.vo.HeliveryDrugVO">
     select
-    h.*,d.name as deliveryName,d.code as deliveryCode
+    h.*,d.name as deliveryName,d.code as deliveryCode,d.price
     from hospital_drug h left join delivery_drug d on h.delivery_id = d.id
      where h.del_flag = '0'
     <if test="hospitalId != null and hospitalId != ''">
@@ -45,7 +45,13 @@
     <if test="packagingSpecifications != null and packagingSpecifications != ''" >
       and h.packaging_specifications like concat('%', #{packagingSpecifications}, '%')
     </if>
-    ORDER BY h.create_time
+    <if test="createTimeStart != null and createTimeStart != ''" >
+      and h.create_time &gt;= #{createTimeStart}
+    </if>
+    <if test="createTimeEnd != null and createTimeEnd != ''" >
+      and h.create_time &lt;= #{createTimeEnd}
+    </if>
+    ORDER BY h.create_time DESC
   </select>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >

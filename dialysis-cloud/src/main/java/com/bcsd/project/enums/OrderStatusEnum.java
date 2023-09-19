@@ -8,7 +8,7 @@ public enum OrderStatusEnum {
     FOUR("4","配送中","订单配送中"),
     FIVE("5","部分配送中","订单部分配送中"),
     ZERO("0","已完成","订单完成"),
-    BURDEN_ONE("-1","已关闭","关闭订单"),
+    BURDEN_ONE("-1","已作废","作废订单"),
     ;
     private final String type;
     private final String name;
