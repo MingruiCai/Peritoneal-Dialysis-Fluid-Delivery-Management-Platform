@@ -50,6 +50,8 @@ public interface WxUserService extends IService<WxUser> {
 	 */
 	WxUser getByOpenId(String openId);
 
+	Object isLoginExist(String appId, String jsCode) throws WxErrorException;
+
 	/**
 	 * 小程序登录
 	 * @param appId

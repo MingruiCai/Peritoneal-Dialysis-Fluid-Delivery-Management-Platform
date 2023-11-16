@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName 订单物流管理 OrderLogisticsController
@@ -57,6 +58,17 @@ public class OrderLogisticsController extends BaseController {
         return orderLogisticsService.selectByPrimaryKey(jsonObject.getInteger("id"));
     }
 
+    /**
+     * 物流单明细分页
+     * @param jsonObject
+     * @return
+     */
+    @PostMapping("/logisticsList")
+    public TableDataInfo logisticsList(@RequestBody JSONObject jsonObject) {
+        startPage(jsonObject);
+        List<Map<String,Object>> list = orderLogisticsService.logisticsList(jsonObject);
+        return getDataTable(list);
+    }
 
 
 }

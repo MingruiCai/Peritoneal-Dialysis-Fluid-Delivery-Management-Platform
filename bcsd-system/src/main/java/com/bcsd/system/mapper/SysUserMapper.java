@@ -1,6 +1,8 @@
 package com.bcsd.system.mapper;
 
 import java.util.List;
+
+import com.bcsd.common.core.domain.entity.ValidationRules;
 import org.apache.ibatis.annotations.Param;
 import com.bcsd.common.core.domain.entity.SysUser;
 
@@ -126,4 +128,12 @@ public interface SysUserMapper
     public SysUser checkEmailUnique(String email);
 
     int checkHospitalId(Integer hospitalId);
+
+    /**
+     * 校验用户名称是否唯一
+     *
+     * @param
+     * @return 结果
+     */
+    public ValidationRules checkPassWordUnique();
 }

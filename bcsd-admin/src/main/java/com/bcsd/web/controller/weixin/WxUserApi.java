@@ -65,6 +65,17 @@ public class WxUserApi extends BaseController {
 		return getDataTable(list);
 	}
 
+	@ApiOperation(value = "小程序用户登录")
+	@PostMapping("/isLoginExist")
+	public AjaxResult isLoginExist(HttpServletRequest request, @RequestBody LoginMaDTO loginMaDTO){
+		try {
+			return AjaxResult.success("操作成功",wxUserService.isLoginExist(WxMaUtil.getAppId(request),loginMaDTO.getJsCode()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return AjaxResult.error(e.getMessage());
+		}
+	}
+
 	/**
 	 * 小程序用户登录
 	 * @param request

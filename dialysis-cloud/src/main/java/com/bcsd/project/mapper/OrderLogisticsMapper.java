@@ -1,5 +1,6 @@
 package com.bcsd.project.mapper;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.bcsd.project.domain.OrderLogistics;
 import com.bcsd.project.domain.dto.OrderLogisticsPageDTO;
@@ -24,5 +25,7 @@ public interface OrderLogisticsMapper extends BaseMapper<OrderLogistics> {
     List<OrderLogistics> selectListByOrderId(Integer orderId);
 
     int getByOrderIdNotId(Map map);
+
+    List<Map<String, Object>> logisticsList(JSONObject jsonObject);
 
 }

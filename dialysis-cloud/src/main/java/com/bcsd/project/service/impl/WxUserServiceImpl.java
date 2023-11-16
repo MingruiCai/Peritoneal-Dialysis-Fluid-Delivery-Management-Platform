@@ -6,6 +6,7 @@ import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
@@ -224,6 +225,18 @@ public class WxUserServiceImpl extends ServiceImpl<WxUserMapper, WxUser> impleme
 	}
 
 	@Override
+	public Object isLoginExist(String appId, String jsCode) throws WxErrorException{
+		WxMaJscode2SessionResult jscode2session = WxMaConfiguration.getMaService(appId).jsCode2SessionInfo(jsCode);
+		String key = WxMaConstants.THIRD_SESSION_BEGIN + ":" + jscode2session.getOpenid();
+		Object o = redisTemplate.opsForValue().get(key);
+		if(o == null){
+			return null;
+		}
+		return o;
+	}
+
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public WxUser loginMa(String appId, String jsCode) throws WxErrorException {
 		WxMaJscode2SessionResult jscode2session = WxMaConfiguration.getMaService(appId).jsCode2SessionInfo(jsCode);
@@ -252,7 +265,7 @@ public class WxUserServiceImpl extends ServiceImpl<WxUserMapper, WxUser> impleme
 			this.updateById(wxUser);
 		}
 
-		String thirdSessionKey = UUID.randomUUID().toString();
+		//String thirdSessionKey = UUID.randomUUID().toString();
 		ThirdSession thirdSession = new ThirdSession();
 		thirdSession.setAppId(appId);
 		thirdSession.setSessionKey(wxUser.getSessionKey());
@@ -261,9 +274,9 @@ public class WxUserServiceImpl extends ServiceImpl<WxUserMapper, WxUser> impleme
 		thirdSession.setIsPerfect(wxUser.getIsPerfect());
 		thirdSession.setWxUserName(wxUser.getNickName());
 		//将3rd_session和用户信息存入redis，并设置过期时间
-		String key = WxMaConstants.THIRD_SESSION_BEGIN + ":" + thirdSessionKey;
+		String key = WxMaConstants.THIRD_SESSION_BEGIN + ":" + jscode2session.getOpenid();
 		redisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(thirdSession) , WxMaConstants.TIME_OUT_SESSION, TimeUnit.DAYS);
-		wxUser.setSessionKey(thirdSessionKey);
+		wxUser.setSessionKey(jscode2session.getOpenid());
 		return wxUser;
 	}
 

@@ -221,4 +221,40 @@
   <select id="getByOrderIdNotId" parameterType="map" resultType="integer">
     select count(1) from order_logistics where order_id = #{orderId} and id != #{id} and status = 0
   </select>
+
+  <select id="logisticsList" resultType="map" parameterType="object">
+    SELECT t4.hospital_name,t3.order_number,t2.status,t2.logistics_number,t3.status AS orderStatus,
+    (SELECT sum(order_number) FROM order_drug d WHERE d.hospital_drug_id = t1.hospital_drug_id AND d.order_id = t1.order_id) AS orderQuantity,
+    (SELECT sum(delivery_number) FROM order_logistics_drug d WHERE d.hospital_drug_id = t1.hospital_drug_id AND d.order_id = t1.order_id) AS logisticsQuantity,
+    t7.code,t7.name,t7.specifications,t7.packaging_specifications,t7.manufacturer,t1.delivery_number,t3.user_name,CONCAT(t3.province_name,t3.city_name,t3.county_name,t3.detail_info) AS address,t3.tel_num,
+    DATE_FORMAT(t2.qs_time, '%Y-%m-%d %H:%i:%s') AS qs_time,
+    DATE_FORMAT(t3.create_time, '%Y-%m-%d %H:%i:%s') AS pssj,
+    t3.create_by,t3.hsqr_by,
+    DATE_FORMAT(t3.hsqr_time, '%Y-%m-%d %H:%i:%s') AS hsqr_time,t3.yssh_by,
+    DATE_FORMAT(t3.yssh_time, '%Y-%m-%d %H:%i:%s') AS yssh_time,
+    DATE_FORMAT(t2.create_time, '%Y-%m-%d %H:%i:%s') AS create_time,t3.is_pay
+    FROM order_logistics_drug t1
+    LEFT JOIN order_logistics t2 ON t1.logistics_id = t2.id
+    LEFT JOIN order_info t3 ON t2.order_id = t3.id
+    LEFT JOIN hospital t4 ON t3.hospital_id = t4.id
+    LEFT JOIN order_drug t5 ON t5.order_id = t3.id
+    LEFT JOIN hospital_drug T6 ON t6.id = t1.hospital_drug_id
+    LEFT JOIN delivery_drug t7 ON t7.id = t6.delivery_id
+    WHERE t4.type = 1 AND t5.hospital_drug_id = t1.hospital_drug_id
+    <if test="hospital_name != null and hospital_name != ''">
+      t4.hospital_name like CONCAT('%',#{hospital_name},'%')
+    </if>
+    <if test="name != null and name != ''">
+      t7.name like CONCAT('%',#{name},'%')
+    </if>
+    <if test="status != null and status != ''">
+      t2.status = #{status}
+    </if>
+    <if test="ysshTimeStart != null">
+      t3.yssh_time &gt;= #{ysshTimeStart}
+    </if>
+    <if test="ysshTimeEnd != null">
+      t3.yssh_time &lt;= #{ysshTimeEnd}
+    </if>
+  </select>
 </mapper>

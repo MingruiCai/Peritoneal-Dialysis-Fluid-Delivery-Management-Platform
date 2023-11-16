@@ -11,6 +11,7 @@ import com.bcsd.common.core.domain.entity.SysRole;
 import com.bcsd.common.core.domain.entity.SysUser;
 import com.bcsd.common.core.page.TableDataInfo;
 import com.bcsd.common.enums.BusinessType;
+import com.bcsd.common.utils.RsaUtils;
 import com.bcsd.common.utils.SecurityUtils;
 import com.bcsd.common.utils.StringUtils;
 import com.bcsd.common.utils.poi.ExcelUtil;
@@ -155,7 +156,7 @@ public class SysUserController extends BaseController
     //@PreAuthorize("@ss.hasPermi('system:user:add')")
     @Log(title = "用户管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody SysUser user)
+    public AjaxResult add(@Validated @RequestBody SysUser user)throws Exception
     {
         if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user)))
         {
@@ -170,9 +171,15 @@ public class SysUserController extends BaseController
                 && UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user)))
         {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，邮箱账号已存在");
+        }else if (StringUtils.isNotEmpty(user.getPassword())){
+            String s = userService.checkPassWordUnique(user);
+            if(!UserConstants.NOT_UNIQUE.equals(s)){
+                return AjaxResult.error(s);
+            }
         }
         user.setCreateBy(getUsername());
-        user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
+        String newPwd = RsaUtils.decryptByPrivateKey(user.getPassword());
+        user.setPassword(SecurityUtils.encryptPassword(newPwd));
         return toAjax(userService.insertUser(user));
     }
 
@@ -200,6 +207,12 @@ public class SysUserController extends BaseController
         {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
+        /*else if (StringUtils.isNotEmpty(user.getPassword())){
+            String s = userService.checkPassWordUnique(user);
+            if(!UserConstants.NOT_UNIQUE.equals(s)){
+                return AjaxResult.error(s);
+            }
+        }*/
         user.setUpdateBy(getUsername());
         return toAjax(userService.updateUser(user));
     }
@@ -225,11 +238,18 @@ public class SysUserController extends BaseController
     //@PreAuthorize("@ss.hasPermi('system:user:resetPwd')")
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping("/resetPwd")
-    public AjaxResult resetPwd(@RequestBody SysUser user)
+    public AjaxResult resetPwd(@RequestBody SysUser user)throws Exception
     {
         userService.checkUserAllowed(user);
         userService.checkUserDataScope(user.getUserId());
-        user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
+        if (StringUtils.isNotEmpty(user.getPassword())){
+        String s = userService.checkPassWordUnique(user);
+        if(!UserConstants.NOT_UNIQUE.equals(s)){
+            return AjaxResult.error(s);
+        }
+    }
+        String newPwd = RsaUtils.decryptByPrivateKey(user.getPassword());
+        user.setPassword(SecurityUtils.encryptPassword(newPwd));
         user.setUpdateBy(getUsername());
         return toAjax(userService.resetPwd(user));
     }
@@ -284,5 +304,10 @@ public class SysUserController extends BaseController
     public AjaxResult deptTree(SysDept dept)
     {
         return AjaxResult.success(deptService.selectDeptTreeList(dept));
+    }
+
+    @PostMapping("/getCheckPassWord")
+    public AjaxResult getCheckPassWord(){
+        return AjaxResult.success(userService.getCheckPassWord());
     }
 }

@@ -254,5 +254,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			#{userId}
         </foreach> 
  	</delete>
-	
+
+
+	<select id="checkPassWordUnique" resultType="com.bcsd.common.core.domain.entity.ValidationRules">
+		select * from validation_rules limit 1
+	</select>
 </mapper> 

@@ -1,5 +1,6 @@
 package com.bcsd.project.service.impl;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bcsd.common.core.domain.AjaxResult;
@@ -86,6 +87,11 @@ public class OrderLogisticsServiceImpl extends ServiceImpl<OrderLogisticsMapper,
 		orderLogistics.setStatus(OrderStatusEnum.ONE.getType());
 		this.baseMapper.updateByPrimaryKeySelective(orderLogistics);
 		return AjaxResult.success();
+	}
+
+	@Override
+	public List<Map<String, Object>> logisticsList(JSONObject jsonObject) {
+		return baseMapper.logisticsList(jsonObject);
 	}
 
 }

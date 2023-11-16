@@ -1,5 +1,6 @@
 package com.bcsd.common.utils;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.bcsd.common.core.domain.BaseInfo;
 import com.github.pagehelper.PageHelper;
 import com.bcsd.common.core.page.PageDomain;
@@ -33,6 +34,17 @@ public class PageUtils extends PageHelper
         PageDomain pageDomain = TableSupport.buildPageRequest();
         Integer pageNum = params.getPageNum()==null?1:params.getPageNum();
         Integer pageSize = params.getPageSize()==null?10:params.getPageSize();
+        Boolean reasonable = pageDomain.getReasonable();
+        PageHelper.startPage(pageNum, pageSize).setReasonable(reasonable);
+    }
+
+    /**
+     * 设置请求分页数据
+     */
+    public static void startPage2(JSONObject params){
+        PageDomain pageDomain = TableSupport.buildPageRequest();
+        Integer pageNum = params.getInteger("pageNum")==null?1:params.getInteger("pageNum");
+        Integer pageSize = params.getInteger("pageSize")==null?10:params.getInteger("pageSize");
         Boolean reasonable = pageDomain.getReasonable();
         PageHelper.startPage(pageNum, pageSize).setReasonable(reasonable);
     }

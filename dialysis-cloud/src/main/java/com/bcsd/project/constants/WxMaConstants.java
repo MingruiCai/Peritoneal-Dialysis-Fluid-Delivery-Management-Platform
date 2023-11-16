@@ -31,7 +31,7 @@ public interface WxMaConstants {
 	/**
 	 * redis中3rd_session过期时间(单位：小时)
 	 */
-	long TIME_OUT_SESSION = 7;
+	long TIME_OUT_SESSION = 365;
 	/**
 	 * redis中3rd_session拼接前缀
 	 */

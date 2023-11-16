@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.bcsd.common.core.domain.BaseInfo;
 import com.bcsd.common.core.domain.entity.SysRole;
 import org.slf4j.Logger;
@@ -66,6 +67,14 @@ public class BaseController
     protected void startPage(BaseInfo params)
     {
         PageUtils.startPage(params);
+    }
+
+    /**
+     * 设置请求分页数据
+     */
+    protected void startPage(JSONObject params)
+    {
+        PageUtils.startPage2(params);
     }
 
     /**

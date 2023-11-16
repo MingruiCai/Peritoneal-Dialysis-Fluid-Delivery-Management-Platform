@@ -1,5 +1,6 @@
 package com.bcsd.web.controller.system;
 
+import com.bcsd.common.utils.RsaUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -94,23 +95,25 @@ public class SysProfileController extends BaseController
      */
     @Log(title = "个人信息", businessType = BusinessType.UPDATE)
     @PutMapping("/updatePwd")
-    public AjaxResult updatePwd(String oldPassword, String newPassword)
+    public AjaxResult updatePwd(String oldPassword, String newPassword)throws Exception
     {
         LoginUser loginUser = getLoginUser();
         String userName = loginUser.getUsername();
         String password = loginUser.getPassword();
-        if (!SecurityUtils.matchesPassword(oldPassword, password))
+        String oldPassword1 = RsaUtils.decryptByPrivateKey(oldPassword);
+        String newPassword1 = RsaUtils.decryptByPrivateKey(newPassword);
+        if (!SecurityUtils.matchesPassword(oldPassword1, password))
         {
             return AjaxResult.error("修改密码失败，旧密码错误");
         }
-        if (SecurityUtils.matchesPassword(newPassword, password))
+        if (SecurityUtils.matchesPassword(newPassword1, password))
         {
             return AjaxResult.error("新密码不能与旧密码相同");
         }
-        if (userService.resetUserPwd(userName, SecurityUtils.encryptPassword(newPassword)) > 0)
+        if (userService.resetUserPwd(userName, SecurityUtils.encryptPassword(newPassword1)) > 0)
         {
             // 更新缓存用户密码
-            loginUser.getUser().setPassword(SecurityUtils.encryptPassword(newPassword));
+            loginUser.getUser().setPassword(SecurityUtils.encryptPassword(newPassword1));
             tokenService.setLoginUser(loginUser);
             return AjaxResult.success();
         }

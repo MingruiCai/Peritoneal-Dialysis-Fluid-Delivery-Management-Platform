@@ -4,7 +4,9 @@ import com.bcsd.common.annotation.DataScope;
 import com.bcsd.common.constant.UserConstants;
 import com.bcsd.common.core.domain.entity.SysRole;
 import com.bcsd.common.core.domain.entity.SysUser;
+import com.bcsd.common.core.domain.entity.ValidationRules;
 import com.bcsd.common.exception.ServiceException;
+import com.bcsd.common.utils.RsaUtils;
 import com.bcsd.common.utils.SecurityUtils;
 import com.bcsd.common.utils.StringUtils;
 import com.bcsd.common.utils.bean.BeanValidators;
@@ -162,6 +164,33 @@ public class SysUserServiceImpl implements ISysUserService
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
+    }
+
+    @Override
+    public ValidationRules getCheckPassWord() {
+        return userMapper.checkPassWordUnique();
+    }
+
+    /**
+     * 验证密码是否符合规则
+     *
+     * @param user 用户信息
+     * @return 结果
+     */
+    @Override
+    public String checkPassWordUnique(SysUser user) {
+        String newPwd ="";
+        try {
+            newPwd = RsaUtils.decryptByPrivateKey(user.getPassword());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        ValidationRules rules = userMapper.checkPassWordUnique();
+        if (StringUtils.isNotNull(rules) && !newPwd.matches(rules.getValidation()))
+        {
+            return rules.getPrompt();
+        }
+        return UserConstants.NOT_UNIQUE;
     }
 
     /**

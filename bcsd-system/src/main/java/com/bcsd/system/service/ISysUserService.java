@@ -2,6 +2,7 @@ package com.bcsd.system.service;
 
 import java.util.List;
 import com.bcsd.common.core.domain.entity.SysUser;
+import com.bcsd.common.core.domain.entity.ValidationRules;
 
 /**
  * 用户 业务层
@@ -73,6 +74,15 @@ public interface ISysUserService
      * @return 结果
      */
     public String checkPhoneUnique(SysUser user);
+
+    ValidationRules getCheckPassWord();
+
+    /**
+     * 验证密码是否符合规则
+     * @param user
+     * @return
+     */
+    String checkPassWordUnique(SysUser user);
 
     /**
      * 校验email是否唯一

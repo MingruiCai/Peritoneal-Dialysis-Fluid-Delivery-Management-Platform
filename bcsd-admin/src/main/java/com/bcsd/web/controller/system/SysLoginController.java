@@ -63,6 +63,7 @@ public class SysLoginController {
         // 权限集合
         Set<String> permissions = permissionService.getMenuPermission(user);
         AjaxResult ajax = AjaxResult.success();
+        user.setPassword(null);
         ajax.put("user", user);
         ajax.put("roles", roles);
         ajax.put("permissions", permissions);
