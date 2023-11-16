@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.bcsd.common.core.domain.AjaxResult;
+import com.bcsd.common.utils.*;
 import com.bcsd.common.utils.http.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,6 @@ import com.bcsd.common.exception.ServiceException;
 import com.bcsd.common.exception.user.CaptchaException;
 import com.bcsd.common.exception.user.CaptchaExpireException;
 import com.bcsd.common.exception.user.UserPasswordNotMatchException;
-import com.bcsd.common.utils.DateUtils;
-import com.bcsd.common.utils.MessageUtils;
-import com.bcsd.common.utils.ServletUtils;
-import com.bcsd.common.utils.StringUtils;
 import com.bcsd.common.utils.ip.IpUtils;
 import com.bcsd.framework.manager.AsyncManager;
 import com.bcsd.framework.manager.factory.AsyncFactory;
@@ -70,11 +67,13 @@ public class SysLoginService
         if (captchaEnabled) {
             validateCaptcha(username, code, uuid);
         }
+
         // 用户验证
         Authentication authentication = null;
         try
         {
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+            String pwdNew = RsaUtils.decryptByPrivateKey(password);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, pwdNew);
             AuthenticationContextHolder.setContext(authenticationToken);
             // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
             authentication = authenticationManager.authenticate(authenticationToken);
